@@ -1,80 +1,79 @@
-package fieldmarshal.repobrowse.models;
+package fieldmarshal.repobrowse.models
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
 /**
  * Created by fieldmarshal on 27.10.17.
  */
 
-public class Owner {
+class Owner {
 
     @Expose
     @SerializedName("login")
-    public String login;
+    var login: String? = null
 
     @Expose
     @SerializedName("id")
-    public Integer id;
+    var id: Int? = null
 
     @Expose
     @SerializedName("avatar_url")
-    public String avatarUrl;
+    var avatarUrl: String? = null
 
     @Expose
     @SerializedName("gravatar_id")
-    public String gravatarId;
+    var gravatarId: String? = null
 
     @Expose
     @SerializedName("url")
-    public String url;
+    var url: String? = null
 
     @Expose
     @SerializedName("html_url")
-    public String htmlUrl;
+    var htmlUrl: String? = null
 
     @Expose
     @SerializedName("followers_url")
-    public String followersUrl;
+    var followersUrl: String? = null
 
     @Expose
     @SerializedName("following_url")
-    public String followingUrl;
+    var followingUrl: String? = null
 
     @Expose
     @SerializedName("gists_url")
-    public String gistsUrl;
+    var gistsUrl: String? = null
 
     @Expose
     @SerializedName("starred_url")
-    public String starredUrl;
+    var starredUrl: String? = null
 
     @Expose
     @SerializedName("subscriptions_url")
-    public String subscriptionsUrl;
+    var subscriptionsUrl: String? = null
 
     @Expose
     @SerializedName("organizations_url")
-    public String organizationsUrl;
+    var organizationsUrl: String? = null
 
     @Expose
     @SerializedName("repos_url")
-    public String reposUrl;
+    var reposUrl: String? = null
 
     @Expose
     @SerializedName("events_url")
-    public String eventsUrl;
+    var eventsUrl: String? = null
 
     @Expose
     @SerializedName("received_events_url")
-    public String receivedEventsUrl;
+    var receivedEventsUrl: String? = null
 
     @Expose
     @SerializedName("type")
-    public String type;
+    var type: String? = null
 
     @Expose
     @SerializedName("site_admin")
-    public Boolean siteAdmin;
-
+    var siteAdmin: Boolean? = null
 }

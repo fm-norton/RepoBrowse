@@ -1,292 +1,291 @@
-package fieldmarshal.repobrowse.models;
+package fieldmarshal.repobrowse.models
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
 /**
  * Created by fieldmarshal on 27.10.17.
  */
 
-public class Repo {
+class Repo {
 
     @Expose
     @SerializedName("id")
-    public Integer id;
+    var id: Int? = null
 
     @Expose
     @SerializedName("name")
-    public String name;
+    var name: String? = null
 
     @Expose
     @SerializedName("full_name")
-    public String fullName;
+    var fullName: String? = null
 
     @Expose
     @SerializedName("owner")
-    public Owner owner;
+    var owner: Owner? = null
 
     @Expose
     @SerializedName("private")
-    public Boolean _private;
+    var _private: Boolean? = null
 
     @Expose
     @SerializedName("html_url")
-    public String htmlUrl;
+    var htmlUrl: String? = null
 
     @Expose
     @SerializedName("description")
-    public String description;
+    var description: String? = null
 
     @Expose
     @SerializedName("fork")
-    public Boolean fork;
+    var fork: Boolean? = null
 
     @Expose
     @SerializedName("url")
-    public String url;
+    var url: String? = null
 
     @Expose
     @SerializedName("forks_url")
-    public String forksUrl;
+    var forksUrl: String? = null
 
     @Expose
     @SerializedName("keys_url")
-    public String keysUrl;
+    var keysUrl: String? = null
 
     @Expose
     @SerializedName("collaborators_url")
-    public String collaboratorsUrl;
+    var collaboratorsUrl: String? = null
 
     @Expose
     @SerializedName("teams_url")
-    public String teamsUrl;
+    var teamsUrl: String? = null
 
     @Expose
     @SerializedName("hooks_url")
-    public String hooksUrl;
+    var hooksUrl: String? = null
 
     @Expose
     @SerializedName("issue_events_url")
-    public String issueEventsUrl;
+    var issueEventsUrl: String? = null
 
     @Expose
     @SerializedName("events_url")
-    public String eventsUrl;
+    var eventsUrl: String? = null
 
     @Expose
     @SerializedName("assignees_url")
-    public String assigneesUrl;
+    var assigneesUrl: String? = null
 
     @Expose
     @SerializedName("branches_url")
-    public String branchesUrl;
+    var branchesUrl: String? = null
 
     @Expose
     @SerializedName("tags_url")
-    public String tagsUrl;
+    var tagsUrl: String? = null
 
     @Expose
     @SerializedName("blobs_url")
-    public String blobsUrl;
+    var blobsUrl: String? = null
 
     @Expose
     @SerializedName("git_tags_url")
-    public String gitTagsUrl;
+    var gitTagsUrl: String? = null
 
     @Expose
     @SerializedName("git_refs_url")
-    public String gitRefsUrl;
+    var gitRefsUrl: String? = null
 
     @Expose
     @SerializedName("trees_url")
-    public String treesUrl;
+    var treesUrl: String? = null
 
     @Expose
     @SerializedName("statuses_url")
-    public String statusesUrl;
+    var statusesUrl: String? = null
 
     @Expose
     @SerializedName("languages_url")
-    public String languagesUrl;
+    var languagesUrl: String? = null
 
     @Expose
     @SerializedName("stargazers_url")
-    public String stargazersUrl;
+    var stargazersUrl: String? = null
 
     @Expose
     @SerializedName("contributors_url")
-    public String contributorsUrl;
+    var contributorsUrl: String? = null
 
     @Expose
     @SerializedName("subscribers_url")
-    public String subscribersUrl;
+    var subscribersUrl: String? = null
 
     @Expose
     @SerializedName("subscription_url")
-    public String subscriptionUrl;
+    var subscriptionUrl: String? = null
 
     @Expose
     @SerializedName("commits_url")
-    public String commitsUrl;
+    var commitsUrl: String? = null
 
     @Expose
     @SerializedName("git_commits_url")
-    public String gitCommitsUrl;
+    var gitCommitsUrl: String? = null
 
     @Expose
     @SerializedName("comments_url")
-    public String commentsUrl;
+    var commentsUrl: String? = null
 
     @Expose
     @SerializedName("issue_comment_url")
-    public String issueCommentUrl;
+    var issueCommentUrl: String? = null
 
     @Expose
     @SerializedName("contents_url")
-    public String contentsUrl;
+    var contentsUrl: String? = null
 
     @Expose
     @SerializedName("compare_url")
-    public String compareUrl;
+    var compareUrl: String? = null
 
     @Expose
     @SerializedName("merges_url")
-    public String mergesUrl;
+    var mergesUrl: String? = null
 
     @Expose
     @SerializedName("archive_url")
-    public String archiveUrl;
+    var archiveUrl: String? = null
 
     @Expose
     @SerializedName("downloads_url")
-    public String downloadsUrl;
+    var downloadsUrl: String? = null
 
     @Expose
     @SerializedName("issues_url")
-    public String issuesUrl;
+    var issuesUrl: String? = null
 
     @Expose
     @SerializedName("pulls_url")
-    public String pullsUrl;
+    var pullsUrl: String? = null
 
     @Expose
     @SerializedName("milestones_url")
-    public String milestonesUrl;
+    var milestonesUrl: String? = null
 
     @Expose
     @SerializedName("notifications_url")
-    public String notificationsUrl;
+    var notificationsUrl: String? = null
 
     @Expose
     @SerializedName("labels_url")
-    public String labelsUrl;
+    var labelsUrl: String? = null
 
     @Expose
     @SerializedName("releases_url")
-    public String releasesUrl;
+    var releasesUrl: String? = null
 
     @Expose
     @SerializedName("deployments_url")
-    public String deploymentsUrl;
+    var deploymentsUrl: String? = null
 
     @Expose
     @SerializedName("created_at")
-    public String createdAt;
+    var createdAt: String? = null
 
     @Expose
     @SerializedName("updated_at")
-    public String updatedAt;
+    var updatedAt: String? = null
 
     @Expose
     @SerializedName("pushed_at")
-    public String pushedAt;
+    var pushedAt: String? = null
 
     @Expose
     @SerializedName("git_url")
-    public String gitUrl;
+    var gitUrl: String? = null
 
     @Expose
     @SerializedName("ssh_url")
-    public String sshUrl;
+    var sshUrl: String? = null
 
     @Expose
     @SerializedName("clone_url")
-    public String cloneUrl;
+    var cloneUrl: String? = null
 
     @Expose
     @SerializedName("svn_url")
-    public String svnUrl;
+    var svnUrl: String? = null
 
     @Expose
     @SerializedName("homepage")
-    public String homepage;
+    var homepage: String? = null
 
     @Expose
     @SerializedName("size")
-    public Integer size;
+    var size: Int? = null
 
     @Expose
     @SerializedName("stargazers_count")
-    public Integer stargazersCount;
+    var stargazersCount: Int? = null
 
     @Expose
     @SerializedName("watchers_count")
-    public Integer watchersCount;
+    var watchersCount: Int? = null
 
     @Expose
     @SerializedName("language")
-    public String language;
+    var language: String? = null
 
     @Expose
     @SerializedName("has_issues")
-    public Boolean hasIssues;
+    var hasIssues: Boolean? = null
 
     @Expose
     @SerializedName("has_projects")
-    public Boolean hasProjects;
+    var hasProjects: Boolean? = null
 
     @Expose
     @SerializedName("has_downloads")
-    public Boolean hasDownloads;
+    var hasDownloads: Boolean? = null
 
     @Expose
     @SerializedName("has_wiki")
-    public Boolean hasWiki;
+    var hasWiki: Boolean? = null
 
     @Expose
     @SerializedName("has_pages")
-    public Boolean hasPages;
+    var hasPages: Boolean? = null
 
     @Expose
     @SerializedName("forks_count")
-    public Integer forksCount;
+    var forksCount: Int? = null
 
     @Expose
     @SerializedName("mirror_url")
-    public Object mirrorUrl;
+    var mirrorUrl: Any? = null
 
     @Expose
     @SerializedName("archived")
-    public Boolean archived;
+    var archived: Boolean? = null
 
     @Expose
     @SerializedName("open_issues_count")
-    public Integer openIssuesCount;
+    var openIssuesCount: Int? = null
 
     @Expose
     @SerializedName("forks")
-    public Integer forks;
+    var forks: Int? = null
 
     @Expose
     @SerializedName("open_issues")
-    public Integer openIssues;
+    var openIssues: Int? = null
 
     @Expose
     @SerializedName("watchers")
-    public Integer watchers;
+    var watchers: Int? = null
 
     @Expose
     @SerializedName("default_branch")
-    public String defaultBranch;
-
+    var defaultBranch: String? = null
 }
