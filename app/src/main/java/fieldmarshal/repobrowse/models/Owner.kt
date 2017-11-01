@@ -17,6 +17,10 @@ data class Owner (
     val login: String,
 
     @Expose
+    @SerializedName("avatar_url")
+    val avatarUrl: String,
+
+    @Expose
     @SerializedName("url")
     var url: String,
 

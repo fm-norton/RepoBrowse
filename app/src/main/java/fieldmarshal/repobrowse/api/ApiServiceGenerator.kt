@@ -1,6 +1,8 @@
 package fieldmarshal.repobrowse.api
 
 import fieldmarshal.repobrowse.BuildConfig
+import io.reactivex.Scheduler
+import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
@@ -24,13 +26,13 @@ class ApiServiceGenerator {
             return client
         }
 
-        private var builder = Retrofit.Builder()
+        private var retrofit = Retrofit.Builder()
                 .baseUrl(BuildConfig.API_URL)
                 .client(getClientLogger().build())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory
+                        .createWithScheduler(Schedulers.io()))
                 .addConverterFactory(GsonConverterFactory.create())
-
-        private var retrofit = builder.build()
+                .build()
 
         fun <T> createService(serviceClass: Class<T>) : T {
             return retrofit.create(serviceClass)
