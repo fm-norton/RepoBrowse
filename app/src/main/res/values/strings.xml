@@ -3,4 +3,10 @@
     <string name="repos">Repos:</string>
     <string name="username">Lorem ipsum</string>
     <string name="url">Lorem ipsum dolor sit amet, consectetur</string>
+    <string name="stars_count">123</string>
+    <string name="forks_count">95</string>
+    <string name="fullname_stub">LoremIpsumDolor</string>
+    <string name="desc_stub">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</string>
+    <string name="date_stub">2001&#8211;09&#8211;11</string>
+    <string name="prettyDateFormat">dd.MM.YYYY</string>
 </resources>

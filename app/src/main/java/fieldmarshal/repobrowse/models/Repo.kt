@@ -37,7 +37,11 @@ data class Repo (
         var description: String,
 
         @Expose
-        @SerializedName("watchers_count")
-        var watchers: Int
+        @SerializedName("stargazers_count")
+        var stargazers: Int,
+
+        @Expose
+        @SerializedName("forks_count")
+        var forks: Int
 
 )

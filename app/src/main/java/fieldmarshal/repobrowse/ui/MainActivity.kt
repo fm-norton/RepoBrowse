@@ -2,25 +2,27 @@ package fieldmarshal.repobrowse.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
+import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.PresenterType
 import fieldmarshal.repobrowse.R
-import fieldmarshal.repobrowse.api.ApiServiceGenerator
-import fieldmarshal.repobrowse.api.GithubRest
-
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import fieldmarshal.repobrowse.presenters.MainPresenter
+import fieldmarshal.repobrowse.views.MainView
 
 class MainActivity : AppCompatActivity() {
 
+    /*@InjectPresenter(type = PresenterType.GLOBAL)
+    lateinit var mainPresenter: MainPresenter*/
+
+    lateinit var usersFragment : UsersRecyclerFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var fragment = UsersRecyclerFragment.newInstance()
+        usersFragment = UsersRecyclerFragment.newInstance()
         supportFragmentManager.beginTransaction()
-                .add(R.id.userContainer, fragment)
-                .addToBackStack("frag")
+                .add(R.id.fragmentContainer, usersFragment)
+                .addToBackStack("users")
                 .commitAllowingStateLoss()
 
     }

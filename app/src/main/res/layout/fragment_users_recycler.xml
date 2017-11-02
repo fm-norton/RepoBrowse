@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="fieldmarshal.repobrowse.ui.UsersRecyclerFragment"
-    android:id="@+id/userContainer">
+    android:id="@+id/fragmentContainer">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvUsers"

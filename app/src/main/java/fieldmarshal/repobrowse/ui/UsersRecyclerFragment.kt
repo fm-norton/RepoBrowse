@@ -39,13 +39,10 @@ class UsersRecyclerFragment : Fragment() {
 
     private lateinit var rvUsers: RecyclerView
     private lateinit var ownersAdapter: OwnersAdapter
-    private lateinit var layoutManager: RecyclerView.LayoutManager
 
-    protected var owners = listOf<Owner>()
-    protected var ownerMutableList = mutableListOf<Owner>()
+    private var owners = listOf<Owner>()
+    private var ownerMutableList = mutableListOf<Owner>()
     private var itemInsertPos = 0
-
-
     private val githubRest = ApiServiceGenerator.createService(GithubRest::class.java)
 
     // TODO fix the query so that it returns correct response
@@ -60,8 +57,15 @@ class UsersRecyclerFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         ownersAdapter = OwnersAdapter(context, ownerMutableList, listener = {
-            owner -> Toast.makeText(context,
-                owner.url, Toast.LENGTH_SHORT).show()
+            owner ->
+            var args = Bundle()
+            args.putString("username", owner.login)
+            var repoFragment = RepoRecyclerFragment.newInstance()
+            repoFragment.arguments = args
+            activity.supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, repoFragment)
+                    .addToBackStack("repos")
+                    .commitAllowingStateLoss()
         })
         disposable.add(
                 call.subscribeOn(Schedulers.newThread())
@@ -75,7 +79,6 @@ class UsersRecyclerFragment : Fragment() {
                                     Log.d(TAG, "Users' data received")
                                     ownerMutableList.addAll(owners)
                                     ownersAdapter.notifyItemRangeInserted(itemInsertPos, owners.size)
-
                                 },
                                 { t: Throwable? ->
                                     Toast.makeText(context, t?.message, Toast.LENGTH_LONG).show()
@@ -147,11 +150,11 @@ class UsersRecyclerFragment : Fragment() {
 
         // TODO: Rename and change types and number of parameters
         fun newInstance(): UsersRecyclerFragment {
-            val fragment = UsersRecyclerFragment()
+            var fragment = UsersRecyclerFragment()
             //val args = Bundle()
             //args.putString(ARG_PARAM1, param1)
             //args.putString(ARG_PARAM2, param2)
-            //fragment.arguments = args
+            fragment.arguments = Bundle()
             return fragment
         }
     }

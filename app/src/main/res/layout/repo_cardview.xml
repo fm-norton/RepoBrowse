@@ -7,6 +7,10 @@
     card_view:cardBackgroundColor="@color/cardBackground"
     card_view:cardCornerRadius="8dp"
     card_view:cardElevation="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
     android:id="@+id/repoCard">
 
     <RelativeLayout
@@ -17,39 +21,45 @@
         <TextView
             android:id="@+id/fullnameText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/dateCreated"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
+            android:layout_marginStart="8dp"
+            android:text="@string/fullname_stub"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/descText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/fullnameText" />
+            android:layout_below="@id/fullnameText"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/desc_stub"/>
 
         <ImageView
             android:id="@+id/starIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_below="@id/descText"
+            android:layout_marginStart="8dp"
             android:background="@drawable/star" />
 
         <TextView
             android:id="@+id/starCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/starIcon" />
+            android:layout_below="@id/descText"
+            android:layout_toEndOf="@id/starIcon"
+            android:layout_marginStart="4dp"
+            android:text="@string/stars_count"/>
 
         <ImageView
             android:id="@+id/forkIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_below="@id/descText"
             android:layout_toEndOf="@+id/starCount"
+            android:layout_marginStart="8dp"
             android:background="@drawable/fork" />
 
         <TextView
@@ -57,7 +67,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/descText"
-            android:layout_toEndOf="@id/forkIcon" />
+            android:layout_toEndOf="@id/forkIcon"
+            android:layout_marginStart="4dp"
+            android:text="@string/forks_count" />
+
+        <ImageView
+            android:id="@+id/dateIcon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_below="@id/descText"
+            android:layout_toEndOf="@id/forkCount"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/ic_action_calendar_day" />
+
+        <TextView
+            android:id="@+id/dateCreated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/descText"
+            android:layout_toEndOf="@id/dateIcon"
+            android:layout_marginStart="4dp"
+            android:text="@string/date_stub" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>
