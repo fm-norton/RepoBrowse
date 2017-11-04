@@ -1,20 +1,16 @@
 package fieldmarshal.repobrowse.ui
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.arellomobile.mvp.MvpAppCompatActivity
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.PresenterType
+import android.support.v7.app.AppCompatActivity
 import fieldmarshal.repobrowse.R
-import fieldmarshal.repobrowse.presenters.MainPresenter
-import fieldmarshal.repobrowse.views.MainView
 
 class MainActivity : AppCompatActivity() {
 
     /*@InjectPresenter(type = PresenterType.GLOBAL)
     lateinit var mainPresenter: MainPresenter*/
 
-    lateinit var usersFragment : UsersRecyclerFragment
+    private lateinit var usersFragment : UsersRecyclerFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -25,5 +21,14 @@ class MainActivity : AppCompatActivity() {
                 .addToBackStack("users")
                 .commitAllowingStateLoss()
 
+    }
+
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 1) {
+            supportFragmentManager.popBackStackImmediate()
+        } else {
+            finish()
+            super.onBackPressed()
+        }
     }
 }

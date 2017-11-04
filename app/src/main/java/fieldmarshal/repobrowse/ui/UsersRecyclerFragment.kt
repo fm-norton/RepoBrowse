@@ -3,6 +3,7 @@ package fieldmarshal.repobrowse.ui
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -10,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 
 import fieldmarshal.repobrowse.R
@@ -22,7 +24,9 @@ import fieldmarshal.repobrowse.util.Constants
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_users_recycler.*
 import kotlin.collections.*
 
 /**
@@ -37,7 +41,6 @@ class UsersRecyclerFragment : Fragment() {
 
     //private var mListener: OnFragmentInteractionListener? = null
 
-    private lateinit var rvUsers: RecyclerView
     private lateinit var ownersAdapter: OwnersAdapter
 
     private var owners = listOf<Owner>()
@@ -55,6 +58,18 @@ class UsersRecyclerFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        var rootView = inflater!!.inflate(R.layout.fragment_users_recycler, container, false)
+        rootView.tag = TAG
+
+        return rootView
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         ownersAdapter = OwnersAdapter(context, ownerMutableList, listener = {
             owner ->
@@ -67,41 +82,32 @@ class UsersRecyclerFragment : Fragment() {
                     .addToBackStack("repos")
                     .commitAllowingStateLoss()
         })
-        disposable.add(
-                call.subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                { response ->
-                                    response.items.forEach { u ->
-                                        Log.d(TAG, u.login + " " + u.reposUrl)
-                                    }
-                                    owners = response.items
-                                    Log.d(TAG, "Users' data received")
-                                    ownerMutableList.addAll(owners)
-                                    ownersAdapter.notifyItemRangeInserted(itemInsertPos, owners.size)
-                                },
-                                { t: Throwable? ->
-                                    Toast.makeText(context, t?.message, Toast.LENGTH_LONG).show()
-                                    Log.e(TAG, "Exception", t)
-                                },
-                                {
-                                    Log.d(TAG, "Call completed")
-                                }
-                        )
-        )
-    }
-
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        var rootView = inflater!!.inflate(R.layout.fragment_users_recycler, container, false)
-        rootView.tag = TAG
-        rvUsers = rootView.findViewById(R.id.rvUsers)
-
         rvUsers.adapter = ownersAdapter
-
         rvUsers.layoutManager = LinearLayoutManager(context)
+        rvUsers.isNestedScrollingEnabled = false
 
-        return rootView
+        pbUsers.visibility = View.VISIBLE
+
+        if (ownerMutableList.isEmpty()) { // чтобы не вызывать опять, когда вернёмся из RepoFragment
+            disposable.add(
+                    call.subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .doAfterTerminate { pbUsers.visibility = View.GONE }
+                            .subscribe(
+                                    { response ->
+                                        owners = response.items
+                                        ownerMutableList.addAll(owners)
+                                        ownersAdapter.notifyItemRangeInserted(itemInsertPos, owners.size)
+                                    },
+                                    { t: Throwable? ->
+                                        Toast.makeText(context, "Error receiving data", Toast.LENGTH_LONG).show()
+                                        Log.e(TAG, "Exception", t)
+                                    },
+                                    { Log.d(TAG, "Call completed") }
+                            )
+            )
+        }
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -126,9 +132,10 @@ class UsersRecyclerFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        disposable.dispose()
+        if (!disposable.isDisposed) disposable.dispose()
         super.onDestroy()
     }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

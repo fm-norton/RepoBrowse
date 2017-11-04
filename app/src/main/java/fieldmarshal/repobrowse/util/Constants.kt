@@ -1,10 +1,12 @@
 package fieldmarshal.repobrowse.util
 
+import android.graphics.Typeface
+
 /**
  * Created by fieldmarshal on 31.10.17.
  */
 
-enum class UserType(val t: String) { USER("user"), ORG("org") }
+enum class UserType(val type: String) { USER("user"), ORG("org") }
 
 class Constants {
     companion object {
@@ -14,5 +16,9 @@ class Constants {
         val Q_LANGUAGE = "language:"
         val Q_CREATED = "created:"
         val Q_FOLLOWERS = "followers:"
+        val ROBOTO_BOLD = "RobotoSlab-Bold.ttf"
+        val ROBOTO_REGULAR = "RobotoSlab-Regular.ttf"
+        val ROBOTO_LIGHT = "RobotoSlab-Light.ttf"
+        val ROBOTO_THIN = "RobotoSlab-Thin.ttf"
     }
 }

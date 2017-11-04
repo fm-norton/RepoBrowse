@@ -2,8 +2,6 @@ package fieldmarshal.repobrowse.util
 
 import android.support.annotation.NonNull
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
-import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
 /**
@@ -13,7 +11,7 @@ import org.threeten.bp.format.DateTimeFormatter
 class DateUtils {
     companion object {
         fun getDate(@NonNull isoDateString: String): LocalDateTime {
-            return LocalDateTime.parse(isoDateString,  DateTimeFormatter.ISO_DATE_TIME)
+            return LocalDateTime.parse(isoDateString, DateTimeFormatter.ISO_DATE_TIME)
         }
 
         //  call this as follows: var date = getPrettyDate("dd.MM.YYYY", createdAt)

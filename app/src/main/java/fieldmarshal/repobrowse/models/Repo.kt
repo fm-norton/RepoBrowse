@@ -34,7 +34,7 @@ data class Repo (
 
         @Expose
         @SerializedName("description")
-        var description: String,
+        var description: String?,
 
         @Expose
         @SerializedName("stargazers_count")

@@ -1,6 +1,7 @@
 package fieldmarshal.repobrowse.ui.adapters
 
 import android.content.Context
+import android.graphics.Typeface
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,20 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-
 import fieldmarshal.repobrowse.R
 import fieldmarshal.repobrowse.models.Owner
+import fieldmarshal.repobrowse.util.Constants
+import fieldmarshal.repobrowse.util.initTextView
+import fieldmarshal.repobrowse.util.loadUrlAndCropCircle
 
 /**
  * Created by fieldmarshal on 30.10.17.
  */
 
-fun ImageView.loadUrlAndCropCircle(url: String) {
-    Glide.with(context).load(url).apply(RequestOptions.circleCropTransform()).into(this)
-}
 
 class OwnersAdapter(private val context: Context,
                     private val users: List<Owner>,
@@ -42,11 +39,16 @@ class OwnersAdapter(private val context: Context,
 
         fun bind(owner: Owner, listener: (Owner) -> Unit) = with(itemView) {
             avatarView.loadUrlAndCropCircle(owner.avatarUrl)
-            usernameView.text = owner.login
-            val repoString = context.getString(R.string.repos) + " " + owner.reposUrl
-            reposText.text = repoString
+            initTextView(context, usernameView, owner.login, Constants.ROBOTO_BOLD)
+            val repoString = StringBuilder()
+                    .append(context.getString(R.string.repos))
+                    .append(" ")
+                    .append(owner.reposUrl)
+                    .toString()
+            initTextView(context, reposText, repoString, Constants.ROBOTO_REGULAR)
             setOnClickListener { listener(owner) }
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

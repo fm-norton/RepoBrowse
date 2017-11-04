@@ -8,9 +8,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import fieldmarshal.repobrowse.R
-import fieldmarshal.repobrowse.models.Owner
 import fieldmarshal.repobrowse.models.Repo
+import fieldmarshal.repobrowse.util.Constants
 import fieldmarshal.repobrowse.util.DateUtils
+import fieldmarshal.repobrowse.util.initTextView
 import kotlinx.android.synthetic.main.repo_cardview.view.*
 
 /**
@@ -44,15 +45,18 @@ class RepoAdapter(private val context: Context,
         }
 
         fun bind(repo: Repo, listener: (Repo) -> Unit) = with(itemView) {
-            fullnameText.text = repo.fullName
-            descText.text = repo.description
-            starCount.text = repo.stargazers.toString()
-            forkCount.text = repo.forks.toString()
+            initTextView(context, fullnameText, repo.fullName, Constants.ROBOTO_BOLD)
+            initTextView(context, descText, repo.description, Constants.ROBOTO_REGULAR)
+            initTextView(context, starCount, repo.stargazers.toString(), Constants.ROBOTO_LIGHT)
+            initTextView(context, forkCount, repo.forks.toString(), Constants.ROBOTO_LIGHT)
+
             val prettyDateString = DateUtils
                     .getPrettyDate(resources.getString(R.string.prettyDateFormat), repo.createdAt)
-            dateCreated.text = prettyDateString
+
+            initTextView(context, dateCreated, prettyDateString, Constants.ROBOTO_LIGHT)
             setOnClickListener { listener(repo) }
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
