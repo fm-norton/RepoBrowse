@@ -18,26 +18,24 @@ import fieldmarshal.repobrowse.api.GithubRest
 import fieldmarshal.repobrowse.models.Repo
 import fieldmarshal.repobrowse.models.User
 import fieldmarshal.repobrowse.ui.adapters.RepoAdapter
-import fieldmarshal.repobrowse.util.Constants
-import fieldmarshal.repobrowse.util.initTextView
 import fieldmarshal.repobrowse.util.loadUrlAndCropCircle
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_repo_recycler.*
+import kotlinx.android.synthetic.main.fragment_repos.*
 
 
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [RepoRecyclerFragment.OnFragmentInteractionListener] interface
+ * [ReposFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [RepoRecyclerFragment.newInstance] factory method to
+ * Use the [ReposFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class RepoRecyclerFragment : Fragment() {
+class ReposFragment : Fragment() {
 
     //private var mListener: OnFragmentInteractionListener? = null
 
@@ -61,7 +59,7 @@ class RepoRecyclerFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val rootView = inflater!!.inflate(R.layout.fragment_repo_recycler, container, false)
+        val rootView = inflater!!.inflate(R.layout.fragment_repos, container, false)
         rootView.tag = this::class.java.simpleName
         return rootView
     }
@@ -166,10 +164,10 @@ class RepoRecyclerFragment : Fragment() {
 
     companion object {
 
-        var TAG = "RepoRecyclerFragment"
+        var TAG = "ReposFragment"
 
-        fun newInstance(): RepoRecyclerFragment {
-            return RepoRecyclerFragment()
+        fun newInstance(): ReposFragment {
+            return ReposFragment()
         }
     }
 }

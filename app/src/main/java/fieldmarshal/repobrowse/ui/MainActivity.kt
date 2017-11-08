@@ -9,13 +9,13 @@ class MainActivity : AppCompatActivity() {
     /*@InjectPresenter(type = PresenterType.GLOBAL)
     lateinit var mainPresenter: MainPresenter*/
 
-    private lateinit var usersFragment : UsersRecyclerFragment
+    private lateinit var usersFragment : UsersFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        usersFragment = UsersRecyclerFragment.newInstance()
+        usersFragment = UsersFragment.newInstance()
         supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentContainer, usersFragment)
                 .addToBackStack("users")

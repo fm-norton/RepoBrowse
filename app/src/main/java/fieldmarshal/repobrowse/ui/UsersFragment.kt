@@ -3,15 +3,12 @@ package fieldmarshal.repobrowse.ui
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.Toast
 
 import fieldmarshal.repobrowse.R
@@ -24,20 +21,19 @@ import fieldmarshal.repobrowse.util.Constants
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Predicate
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_users_recycler.*
+import kotlinx.android.synthetic.main.fragment_users.*
 import kotlin.collections.*
 
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [UsersRecyclerFragment.OnFragmentInteractionListener] interface
+ * [UsersFragment.OnFragmentInteractionListener] interface
  * to handle interaction events.
- * Use the [UsersRecyclerFragment.newInstance] factory method to
+ * Use the [UsersFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class UsersRecyclerFragment : Fragment() {
+class UsersFragment : Fragment() {
 
     //private var mListener: OnFragmentInteractionListener? = null
 
@@ -61,7 +57,7 @@ class UsersRecyclerFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        var rootView = inflater!!.inflate(R.layout.fragment_users_recycler, container, false)
+        var rootView = inflater!!.inflate(R.layout.fragment_users, container, false)
         rootView.tag = TAG
 
         return rootView
@@ -71,9 +67,9 @@ class UsersRecyclerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         ownersAdapter = OwnersAdapter(context, ownerMutableList, listener = { owner ->
-            var args = Bundle()
+            val args = Bundle()
             args.putString("username", owner.login)
-            var repoFragment = RepoRecyclerFragment.newInstance()
+            val repoFragment = ReposFragment.newInstance()
             repoFragment.arguments = args
             activity.supportFragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainer, repoFragment)
@@ -85,7 +81,6 @@ class UsersRecyclerFragment : Fragment() {
         rvUsers.isNestedScrollingEnabled = false
 
         pbUsers.visibility = View.GONE
-
 
         if (ownerMutableList.isEmpty()) { // чтобы не вызывать опять, когда вернёмся из RepoFragment
 
@@ -109,7 +104,6 @@ class UsersRecyclerFragment : Fragment() {
                             )
             )
         }
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -155,11 +149,11 @@ class UsersRecyclerFragment : Fragment() {
     companion object {
         // TODO: Rename parameter arguments, choose names that match
         // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private val TAG = "UsersRecyclerFragment"
+        private val TAG = "UsersFragment"
 
         // TODO: Rename and change types and number of parameters
-        fun newInstance(): UsersRecyclerFragment {
-            return UsersRecyclerFragment()
+        fun newInstance(): UsersFragment {
+            return UsersFragment()
         }
     }
 }
