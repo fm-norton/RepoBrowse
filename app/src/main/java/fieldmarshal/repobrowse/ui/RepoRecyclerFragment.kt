@@ -1,9 +1,11 @@
 package fieldmarshal.repobrowse.ui
 
+
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,13 +16,17 @@ import fieldmarshal.repobrowse.R
 import fieldmarshal.repobrowse.api.ApiServiceGenerator
 import fieldmarshal.repobrowse.api.GithubRest
 import fieldmarshal.repobrowse.models.Repo
+import fieldmarshal.repobrowse.models.User
 import fieldmarshal.repobrowse.ui.adapters.RepoAdapter
+import fieldmarshal.repobrowse.util.Constants
+import fieldmarshal.repobrowse.util.initTextView
+import fieldmarshal.repobrowse.util.loadUrlAndCropCircle
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_repo_recycler.*
-import java.util.concurrent.ThreadPoolExecutor
+
 
 
 /**
@@ -42,6 +48,8 @@ class RepoRecyclerFragment : Fragment() {
     private var reposMutableList = mutableListOf<Repo>()
     private var itemInsertPos = 0
 
+    private lateinit var user: User
+
     private val githubRest = ApiServiceGenerator.createService(GithubRest::class.java)
 
     var disposable = CompositeDisposable()
@@ -61,34 +69,60 @@ class RepoRecyclerFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val username = arguments.getString("username")
-        val call: Observable<List<Repo>> = githubRest.reposOfUser(username)
+        val callRepos: Observable<List<Repo>> = githubRest.reposOfUser(username)
+        val callUserInfo: Observable<User> = githubRest.getUserInfo(username)
+
 
         reposAdapter = RepoAdapter(context, reposMutableList, listener = {
 
         })
         rvRepos.adapter = reposAdapter
         rvRepos.layoutManager = LinearLayoutManager(context)
+        rvRepos.isNestedScrollingEnabled = false
+
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+
 
         pbRepos.visibility = View.VISIBLE
         disposable.add(
-                call.subscribeOn(Schedulers.newThread())
+                callUserInfo.subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doAfterTerminate { pbRepos.visibility = View.GONE }
+                        .subscribe(
+                                { response ->
+                                    user = response
+                                    backdrop.loadUrlAndCropCircle(user.avatarUrl)
+                                    collapsing_toolbar.title = user.name
+                                    //var reposCount = String.format(resources
+                                    //       .getString(R.string.repos_count), user.publicRepos)
+                                    //collapsing_toolbar. = reposCount
+                                    pbRepos.visibility = View.GONE
+                                },
+                                {
+                                    t -> t.printStackTrace()
+                                }, { Log.d(TAG, "UserInfo call completed") }
+                        )
+        )
+        disposable.add(
+                callRepos.subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { response ->
                                     repos = response
                                     reposMutableList.addAll(repos)
                                     reposAdapter.notifyItemRangeInserted(itemInsertPos, repos.size)
+                                    pbRepos.visibility = View.GONE
                                 },
                                 { t ->
-                                    Toast.makeText(context, "Error receiving data", Toast.LENGTH_LONG).show()
+                                    Toast.makeText(context, "Error receiving data",
+                                            Toast.LENGTH_LONG).show()
                                     Log.e(TAG, t.message, t)
                                 },
-                                { Log.d(TAG, "Call completed") }
+                                {
+                                    Log.d(TAG, "Repos call completed")
+                                    //backdrop.loadUrlAndCropCircle(repos)
+                                }
                         )
         )
-
-
     }
 
     override fun onDestroy() {
@@ -135,8 +169,7 @@ class RepoRecyclerFragment : Fragment() {
         var TAG = "RepoRecyclerFragment"
 
         fun newInstance(): RepoRecyclerFragment {
-            var fragment = RepoRecyclerFragment()
-            return fragment
+            return RepoRecyclerFragment()
         }
     }
-}// Required empty public constructor
+}

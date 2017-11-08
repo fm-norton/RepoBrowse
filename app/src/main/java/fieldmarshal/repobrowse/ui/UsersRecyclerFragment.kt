@@ -48,7 +48,6 @@ class UsersRecyclerFragment : Fragment() {
     private var itemInsertPos = 0
     private val githubRest = ApiServiceGenerator.createService(GithubRest::class.java)
 
-    // TODO fix the query so that it returns correct response
     private var queryStr = StringBuilder()
             .append(Constants.Q_CREATED)
             .append(">=").append(Constants.Q_DATE).toString()
@@ -71,8 +70,7 @@ class UsersRecyclerFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ownersAdapter = OwnersAdapter(context, ownerMutableList, listener = {
-            owner ->
+        ownersAdapter = OwnersAdapter(context, ownerMutableList, listener = { owner ->
             var args = Bundle()
             args.putString("username", owner.login)
             var repoFragment = RepoRecyclerFragment.newInstance()
@@ -86,21 +84,25 @@ class UsersRecyclerFragment : Fragment() {
         rvUsers.layoutManager = LinearLayoutManager(context)
         rvUsers.isNestedScrollingEnabled = false
 
-        pbUsers.visibility = View.VISIBLE
+        pbUsers.visibility = View.GONE
+
 
         if (ownerMutableList.isEmpty()) { // чтобы не вызывать опять, когда вернёмся из RepoFragment
+
+            pbUsers.visibility = View.VISIBLE
             disposable.add(
                     call.subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .doAfterTerminate { pbUsers.visibility = View.GONE }
                             .subscribe(
                                     { response ->
                                         owners = response.items
                                         ownerMutableList.addAll(owners)
                                         ownersAdapter.notifyItemRangeInserted(itemInsertPos, owners.size)
+                                        pbUsers.visibility = View.GONE
                                     },
                                     { t: Throwable? ->
-                                        Toast.makeText(context, "Error receiving data", Toast.LENGTH_LONG).show()
+                                        Toast.makeText(context, "Error receiving data",
+                                                Toast.LENGTH_LONG).show()
                                         Log.e(TAG, "Exception", t)
                                     },
                                     { Log.d(TAG, "Call completed") }
@@ -157,12 +159,7 @@ class UsersRecyclerFragment : Fragment() {
 
         // TODO: Rename and change types and number of parameters
         fun newInstance(): UsersRecyclerFragment {
-            var fragment = UsersRecyclerFragment()
-            //val args = Bundle()
-            //args.putString(ARG_PARAM1, param1)
-            //args.putString(ARG_PARAM2, param2)
-            fragment.arguments = Bundle()
-            return fragment
+            return UsersRecyclerFragment()
         }
     }
-}// Required empty public constructor
+}
