@@ -26,7 +26,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_repos.*
 
 
-
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
@@ -54,6 +53,7 @@ class ReposFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,

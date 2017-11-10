@@ -30,7 +30,7 @@ class ApiServiceGenerator {
                 .baseUrl(BuildConfig.API_URL)
                 .client(getClientLogger().build())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory
-                        .createWithScheduler(Schedulers.io()))
+                        .createWithScheduler(Schedulers.newThread()))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 

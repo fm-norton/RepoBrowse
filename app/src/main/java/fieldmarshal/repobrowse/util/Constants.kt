@@ -20,5 +20,8 @@ class Constants {
         val ROBOTO_REGULAR = "RobotoSlab-Regular.ttf"
         val ROBOTO_LIGHT = "RobotoSlab-Light.ttf"
         val ROBOTO_THIN = "RobotoSlab-Thin.ttf"
+
+        val CONNECT_OK = "Connected"
+        val CONNECT_FAIL = "No connection, check it and try again"
     }
 }

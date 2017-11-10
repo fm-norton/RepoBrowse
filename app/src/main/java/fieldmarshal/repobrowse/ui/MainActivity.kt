@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import fieldmarshal.repobrowse.R
 
-class MainActivity : AppCompatActivity() {
 
-    /*@InjectPresenter(type = PresenterType.GLOBAL)
-    lateinit var mainPresenter: MainPresenter*/
+class MainActivity : AppCompatActivity() {
 
     private lateinit var usersFragment : UsersFragment
 
@@ -20,7 +18,6 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragmentContainer, usersFragment)
                 .addToBackStack("users")
                 .commitAllowingStateLoss()
-
     }
 
     override fun onBackPressed() {
