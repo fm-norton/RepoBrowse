@@ -1,6 +1,6 @@
 package fieldmarshal.repobrowse.mvp
 
-import android.content.BroadcastReceiver
+import android.content.IntentFilter
 import fieldmarshal.repobrowse.util.NetworkStateReceiver
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -12,20 +12,18 @@ import io.reactivex.disposables.Disposable
 interface BaseView {
     // TODO write general methods for all the inherent interfaces if necessary
     fun onError(t : Throwable)
-    //fun showLoading()
-    //fun hideLoading()
 }
 
 open class BasePresenter<out T>(protected val view: T) where T : BaseView {
     protected val disposable = CompositeDisposable()
 
-    protected lateinit var networkStateReceiver : NetworkStateReceiver
+    protected var networkStateReceiver = NetworkStateReceiver()
 
     init {
 
     }
 
-    protected fun registerReceiver(receiver: BroadcastReceiver) {
+    protected fun registerReceiver() {
 
     }
 
