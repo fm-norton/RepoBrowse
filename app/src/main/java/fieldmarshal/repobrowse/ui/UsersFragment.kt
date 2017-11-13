@@ -147,11 +147,8 @@ class UsersFragment : Fragment() {
     }*/
 
     companion object {
-        // TODO: Rename parameter arguments, choose names that match
-        // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-        private val TAG = "UsersFragment"
+        val TAG = "UsersFragment"
 
-        // TODO: Rename and change types and number of parameters
         fun newInstance(): UsersFragment {
             return UsersFragment()
         }

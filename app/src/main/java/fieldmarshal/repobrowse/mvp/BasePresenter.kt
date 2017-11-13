@@ -1,34 +1,36 @@
 package fieldmarshal.repobrowse.mvp
 
+import android.content.Context
 import android.content.IntentFilter
+import android.net.ConnectivityManager
+import fieldmarshal.repobrowse.api.ApiServiceGenerator
+import fieldmarshal.repobrowse.api.GithubRest
 import fieldmarshal.repobrowse.util.NetworkStateReceiver
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 
 /**
  * Created by fieldmarshal on 09.11.17.
  */
 
+
 interface BaseView {
-    // TODO write general methods for all the inherent interfaces if necessary
+    fun beforeLoading()
+    fun onOnlineCheck()
+    fun showProgress()
+    fun hideProgress()
     fun onError(t : Throwable)
 }
 
 open class BasePresenter<out T>(protected val view: T) where T : BaseView {
     protected val disposable = CompositeDisposable()
+    protected val githubRest = ApiServiceGenerator.createService(GithubRest::class.java)
 
+    // Mind that receiver registration / release are to be directly in the Activity
     protected var networkStateReceiver = NetworkStateReceiver()
+    protected var intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
 
     init {
 
-    }
-
-    protected fun registerReceiver() {
-
-    }
-
-    protected fun addCall(d : Disposable) {
-        disposable.add(d)
     }
 
     protected fun clearCalls() {
@@ -36,9 +38,10 @@ open class BasePresenter<out T>(protected val view: T) where T : BaseView {
     }
 
     protected fun dispose() {
-        disposable.dispose()
+        disposable.clear()
+        if (!disposable.isDisposed) disposable.dispose()
     }
 
-    fun checkNetworkState() = false
-
+    fun checkNetworkState(context: Context)
+            = (networkStateReceiver.isNetworkAvailable(context) && networkStateReceiver.isOnline)
 }

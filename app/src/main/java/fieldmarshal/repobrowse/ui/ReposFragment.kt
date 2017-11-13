@@ -1,6 +1,5 @@
 package fieldmarshal.repobrowse.ui
 
-
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -38,7 +37,6 @@ class ReposFragment : Fragment() {
 
     //private var mListener: OnFragmentInteractionListener? = null
 
-    //private lateinit var rvRepos: RecyclerView
     private lateinit var reposAdapter: RepoAdapter
 
     private var repos = listOf<Repo>()
@@ -69,7 +67,6 @@ class ReposFragment : Fragment() {
         val username = arguments.getString("username")
         val callRepos: Observable<List<Repo>> = githubRest.reposOfUser(username)
         val callUserInfo: Observable<User> = githubRest.getUserInfo(username)
-
 
         reposAdapter = RepoAdapter(context, reposMutableList, listener = {
 
@@ -163,7 +160,6 @@ class ReposFragment : Fragment() {
     }
 
     companion object {
-
         var TAG = "ReposFragment"
 
         fun newInstance(): ReposFragment {
