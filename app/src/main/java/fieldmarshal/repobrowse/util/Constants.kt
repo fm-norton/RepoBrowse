@@ -23,5 +23,7 @@ class Constants {
 
         val CONNECT_OK = "Connected"
         val CONNECT_FAIL = "No connection, check it and try again"
+        val NOTHING = "I am doing nothing!"
+        val ERROR_IO = "Error receiving data. Check your internet connection"
     }
 }

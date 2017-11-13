@@ -14,7 +14,6 @@ import io.reactivex.disposables.CompositeDisposable
 
 
 interface BaseView {
-    fun beforeLoading()
     fun onOnlineCheck()
     fun showProgress()
     fun hideProgress()
@@ -26,21 +25,19 @@ open class BasePresenter<out T>(protected val view: T) where T : BaseView {
     protected val githubRest = ApiServiceGenerator.createService(GithubRest::class.java)
 
     // Mind that receiver registration / release are to be directly in the Activity
-    protected var networkStateReceiver = NetworkStateReceiver()
-    protected var intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+    private var networkStateReceiver = NetworkStateReceiver()
+    private var intentFilter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
 
     init {
 
     }
 
-    protected fun clearCalls() {
-        disposable.clear()
-    }
-
-    protected fun dispose() {
+    open fun dispose() {
         disposable.clear()
         if (!disposable.isDisposed) disposable.dispose()
     }
+
+    open fun initRecyclerAdapter(context: Context) {}
 
     fun checkNetworkState(context: Context)
             = (networkStateReceiver.isNetworkAvailable(context) && networkStateReceiver.isOnline)

@@ -6,23 +6,16 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import fieldmarshal.repobrowse.R
-import fieldmarshal.repobrowse.api.ApiServiceGenerator
-import fieldmarshal.repobrowse.api.GithubRest
-import fieldmarshal.repobrowse.models.Repo
 import fieldmarshal.repobrowse.models.User
-import fieldmarshal.repobrowse.ui.adapters.RepoAdapter
-import fieldmarshal.repobrowse.util.loadUrlAndCropCircle
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import fieldmarshal.repobrowse.mvp.ReposPresenter
+import fieldmarshal.repobrowse.mvp.ReposView
+import fieldmarshal.repobrowse.util.*
 import kotlinx.android.synthetic.main.fragment_repos.*
+import java.io.IOException
 
 
 /**
@@ -33,30 +26,18 @@ import kotlinx.android.synthetic.main.fragment_repos.*
  * Use the [ReposFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ReposFragment : Fragment() {
+class ReposFragment : Fragment(), ReposView {
 
     //private var mListener: OnFragmentInteractionListener? = null
 
-    private lateinit var reposAdapter: RepoAdapter
-
-    private var repos = listOf<Repo>()
-    private var reposMutableList = mutableListOf<Repo>()
-    private var itemInsertPos = 0
-
-    private lateinit var user: User
-
-    private val githubRest = ApiServiceGenerator.createService(GithubRest::class.java)
-
-    var disposable = CompositeDisposable()
+    private var presenter = ReposPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         val rootView = inflater!!.inflate(R.layout.fragment_repos, container, false)
         rootView.tag = this::class.java.simpleName
         return rootView
@@ -64,64 +45,54 @@ class ReposFragment : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val username = arguments.getString("username")
-        val callRepos: Observable<List<Repo>> = githubRest.reposOfUser(username)
-        val callUserInfo: Observable<User> = githubRest.getUserInfo(username)
 
-        reposAdapter = RepoAdapter(context, reposMutableList, listener = {
-
-        })
-        rvRepos.adapter = reposAdapter
+        presenter.initServiceCalls(arguments.getString("username"))
+        presenter.initRecyclerAdapter(context)
+        presenter.feedAdapter(rvRepos)
         rvRepos.layoutManager = LinearLayoutManager(context)
         rvRepos.isNestedScrollingEnabled = false
 
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
 
+        presenter.loadToolbar()
+        presenter.loadRepos()
 
+    }
+
+    override fun inflateToolbar(user: User) {
+        backdrop.loadUrlAndCropCircle(user.avatarUrl)
+        collapsing_toolbar.title = user.name
+        collapsing_toolbar.setContentScrimColor(resources.getColor(R.color.md_light_appbar))
+        collapsing_toolbar.setBackgroundColor(resources.getColor(R.color.md_light_appbar))
+    }
+
+    override fun showToolbarProgress() {
+        pbToolbar.visibility = View.VISIBLE
+    }
+
+    override fun hideToolbarProgress() {
+        pbToolbar.visibility = View.GONE
+    }
+
+    override fun showProgress() {
         pbRepos.visibility = View.VISIBLE
-        disposable.add(
-                callUserInfo.subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                { response ->
-                                    user = response
-                                    backdrop.loadUrlAndCropCircle(user.avatarUrl)
-                                    collapsing_toolbar.title = user.name
-                                    //var reposCount = String.format(resources
-                                    //       .getString(R.string.repos_count), user.publicRepos)
-                                    //collapsing_toolbar. = reposCount
-                                    pbRepos.visibility = View.GONE
-                                },
-                                {
-                                    t -> t.printStackTrace()
-                                }, { Log.d(TAG, "UserInfo call completed") }
-                        )
-        )
-        disposable.add(
-                callRepos.subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                { response ->
-                                    repos = response
-                                    reposMutableList.addAll(repos)
-                                    reposAdapter.notifyItemRangeInserted(itemInsertPos, repos.size)
-                                    pbRepos.visibility = View.GONE
-                                },
-                                { t ->
-                                    Toast.makeText(context, "Error receiving data",
-                                            Toast.LENGTH_LONG).show()
-                                    Log.e(TAG, t.message, t)
-                                },
-                                {
-                                    Log.d(TAG, "Repos call completed")
-                                    //backdrop.loadUrlAndCropCircle(repos)
-                                }
-                        )
-        )
+    }
+
+    override fun hideProgress() {
+        pbRepos.visibility = View.GONE
+    }
+
+    override fun onError(t: Throwable) {
+        if (t is IOException)
+            longToast(context, Constants.ERROR_IO)
+    }
+
+    override fun onOnlineCheck() {
+        nothing()
     }
 
     override fun onDestroy() {
-        disposable.dispose()
+        presenter.dispose()
         super.onDestroy()
     }
 

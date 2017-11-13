@@ -5,25 +5,17 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-
 import fieldmarshal.repobrowse.R
-import fieldmarshal.repobrowse.api.ApiServiceGenerator
-import fieldmarshal.repobrowse.api.GithubRest
-import fieldmarshal.repobrowse.models.Owner
-import fieldmarshal.repobrowse.models.UserSearchResult
-import fieldmarshal.repobrowse.ui.adapters.OwnersAdapter
+import fieldmarshal.repobrowse.mvp.UsersPresenter
+import fieldmarshal.repobrowse.mvp.UsersView
 import fieldmarshal.repobrowse.util.Constants
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import fieldmarshal.repobrowse.util.longToast
+import fieldmarshal.repobrowse.util.nothing
 import kotlinx.android.synthetic.main.fragment_users.*
-import kotlin.collections.*
+import java.io.IOException
 
 /**
  * A simple [Fragment] subclass.
@@ -33,23 +25,11 @@ import kotlin.collections.*
  * Use the [UsersFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class UsersFragment : Fragment() {
+class UsersFragment : Fragment(), UsersView {
 
     //private var mListener: OnFragmentInteractionListener? = null
 
-    private lateinit var ownersAdapter: OwnersAdapter
-
-    private var owners = listOf<Owner>()
-    private var ownerMutableList = mutableListOf<Owner>()
-    private var itemInsertPos = 0
-    private val githubRest = ApiServiceGenerator.createService(GithubRest::class.java)
-
-    private var queryStr = StringBuilder()
-            .append(Constants.Q_CREATED)
-            .append(">=").append(Constants.Q_DATE).toString()
-
-    private var call: Observable<UserSearchResult> = githubRest.getUsers(queryStr)
-    private var disposable = CompositeDisposable()
+    private var presenter = UsersPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,52 +39,37 @@ class UsersFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         var rootView = inflater!!.inflate(R.layout.fragment_users, container, false)
         rootView.tag = TAG
-
         return rootView
     }
+
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ownersAdapter = OwnersAdapter(context, ownerMutableList, listener = { owner ->
-            val args = Bundle()
-            args.putString("username", owner.login)
-            val repoFragment = ReposFragment.newInstance()
-            repoFragment.arguments = args
-            activity.supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, repoFragment)
-                    .addToBackStack("repos")
-                    .commitAllowingStateLoss()
-        })
-        rvUsers.adapter = ownersAdapter
+        presenter.initRecyclerAdapter(context)
+        presenter.feedAdapter(rvUsers)
         rvUsers.layoutManager = LinearLayoutManager(context)
         rvUsers.isNestedScrollingEnabled = false
 
-        pbUsers.visibility = View.GONE
-
-        if (ownerMutableList.isEmpty()) { // чтобы не вызывать опять, когда вернёмся из RepoFragment
-
-            pbUsers.visibility = View.VISIBLE
-            disposable.add(
-                    call.subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(
-                                    { response ->
-                                        owners = response.items
-                                        ownerMutableList.addAll(owners)
-                                        ownersAdapter.notifyItemRangeInserted(itemInsertPos, owners.size)
-                                        pbUsers.visibility = View.GONE
-                                    },
-                                    { t: Throwable? ->
-                                        Toast.makeText(context, "Error receiving data",
-                                                Toast.LENGTH_LONG).show()
-                                        Log.e(TAG, "Exception", t)
-                                    },
-                                    { Log.d(TAG, "Call completed") }
-                            )
-            )
-        }
+        presenter.loadUsers()
     }
+
+    override fun showProgress() {
+        pbUsers.visibility = View.VISIBLE
+    }
+
+    override fun hideProgress() {
+        pbUsers.visibility = View.GONE
+    }
+
+    override fun onError(t: Throwable) {
+        if (t is IOException) longToast(context, Constants.ERROR_IO)
+    }
+
+    override fun onOnlineCheck() {
+        nothing()
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     fun onButtonPressed(uri: Uri) {
@@ -128,7 +93,7 @@ class UsersFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        if (!disposable.isDisposed) disposable.dispose()
+        presenter.dispose()
         super.onDestroy()
     }
 

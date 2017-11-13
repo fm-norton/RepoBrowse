@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragmentContainer, usersFragment)
                 .addToBackStack("users")
                 .commitAllowingStateLoss()
-
     }
 
     override fun onBackPressed() {

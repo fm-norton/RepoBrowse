@@ -42,6 +42,16 @@
                 style="@style/AppTheme"
                 app:layout_collapseMode="pin"/>
 
+            <ProgressBar
+                android:id="@+id/pbToolbar"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="64dp"
+                android:visibility="gone"
+                android:indeterminate="true" />
+
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -66,6 +76,7 @@
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="32dp"
         android:indeterminate="true"
+        android:visibility="gone"
         style="?android:attr/progressBarStyle" />
 
 </android.support.design.widget.CoordinatorLayout>
