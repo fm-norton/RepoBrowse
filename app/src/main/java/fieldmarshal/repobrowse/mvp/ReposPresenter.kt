@@ -1,12 +1,9 @@
 package fieldmarshal.repobrowse.mvp
 
-import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import fieldmarshal.repobrowse.models.Repo
 import fieldmarshal.repobrowse.models.User
 import fieldmarshal.repobrowse.ui.ReposFragment
-import fieldmarshal.repobrowse.ui.adapters.RepoAdapter
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -17,33 +14,26 @@ import io.reactivex.schedulers.Schedulers
 
 interface ReposView : BaseView {
     fun inflateToolbar(user: User)
+    fun onReposLoaded()
     fun showToolbarProgress()
     fun hideToolbarProgress()
 }
 
 class ReposPresenter(view: ReposView) : BasePresenter<ReposView>(view) {
     private lateinit var username: String
-
     private lateinit var callRepos: Observable<List<Repo>>
     private lateinit var callUserInfo: Observable<User>
 
-    private var repos = listOf<Repo>()
-    private var reposMutableList = mutableListOf<Repo>()
-
-    private var itemInsertPos = 0
-    private lateinit var reposAdapter: RepoAdapter
+    var repos = listOf<Repo>()
+        private set
+    var reposMutableList = mutableListOf<Repo>()
+        private set
 
     private lateinit var user: User
 
     override fun dispose() {
         super.dispose()
     }
-
-    override fun initRecyclerAdapter(context: Context) {
-        reposAdapter = RepoAdapter(context, reposMutableList, listener = {})
-    }
-
-    fun feedAdapter(rv: RecyclerView) { rv.adapter = reposAdapter }
 
     fun initServiceCalls(arg: String) {
         username = arg
@@ -82,12 +72,15 @@ class ReposPresenter(view: ReposView) : BasePresenter<ReposView>(view) {
         disposable.add(
                 callRepos.subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ response ->
+                        .subscribe(
+                                { response ->
                                     repos = response
                                     reposMutableList.addAll(repos)
-                                    reposAdapter.notifyItemRangeInserted(itemInsertPos, repos.size)
+                                    view.onReposLoaded()
                                     view.hideProgress()
-                                }, { t -> view.onError(t)
+                                },
+                                { t ->
+                                    view.onError(t)
                                     Log.e(ReposFragment.TAG, t.message, t)
                                 }, { Log.d(ReposFragment.TAG, "Repos call completed") }
                         )

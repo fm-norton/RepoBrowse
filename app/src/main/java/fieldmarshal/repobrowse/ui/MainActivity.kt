@@ -3,11 +3,12 @@ package fieldmarshal.repobrowse.ui
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import fieldmarshal.repobrowse.R
+import fieldmarshal.repobrowse.models.Owner
 
+class MainActivity : AppCompatActivity(), UsersFragment.OnUserSelectedListener {
 
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var usersFragment : UsersFragment
+    lateinit var usersFragment: UsersFragment
+    private lateinit var reposFragment: ReposFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +19,19 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragmentContainer, usersFragment)
                 .addToBackStack("users")
                 .commitAllowingStateLoss()
+
+    }
+
+    override fun onUserSelected(user: Owner) {
+        val args = Bundle()
+        args.putString("username", user.login)
+        reposFragment = ReposFragment.newInstance()
+        reposFragment.arguments = args
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, reposFragment)
+                .addToBackStack("repos")
+                .commitAllowingStateLoss()
+        supportActionBar?.title = ""
     }
 
     override fun onBackPressed() {

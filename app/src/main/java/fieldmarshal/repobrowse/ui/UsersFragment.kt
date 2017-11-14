@@ -1,17 +1,21 @@
 package fieldmarshal.repobrowse.ui
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import fieldmarshal.repobrowse.R
+import fieldmarshal.repobrowse.models.Owner
 import fieldmarshal.repobrowse.mvp.UsersPresenter
 import fieldmarshal.repobrowse.mvp.UsersView
 import fieldmarshal.repobrowse.util.Constants
+import fieldmarshal.repobrowse.util.ItemClickSupport
 import fieldmarshal.repobrowse.util.longToast
 import fieldmarshal.repobrowse.util.nothing
 import kotlinx.android.synthetic.main.fragment_users.*
@@ -20,38 +24,49 @@ import java.io.IOException
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
- * [UsersFragment.OnFragmentInteractionListener] interface
+ * [UsersFragment.OnUserSelectedListener] interface
  * to handle interaction events.
  * Use the [UsersFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class UsersFragment : Fragment(), UsersView {
 
-    //private var mListener: OnFragmentInteractionListener? = null
-
+    private var selectedListener: OnUserSelectedListener? = null
     private var presenter = UsersPresenter(this)
+
+    private var itemInsertPos = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
+    private lateinit var tbUsers: Toolbar
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        var rootView = inflater!!.inflate(R.layout.fragment_users, container, false)
+        val rootView = inflater!!.inflate(R.layout.fragment_users, container, false)
         rootView.tag = TAG
+        tbUsers = rootView.findViewById(R.id.tbUsers)
+        (activity as AppCompatActivity).setSupportActionBar(tbUsers)
         return rootView
     }
-
-
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.initRecyclerAdapter(context)
-        presenter.feedAdapter(rvUsers)
+        rvUsers.adapter = OwnersAdapter(context, presenter.ownerMutableList, listener = {
+            user ->
+            if (selectedListener != null) {
+                selectedListener?.onUserSelected(user)
+            }
+        })
         rvUsers.layoutManager = LinearLayoutManager(context)
         rvUsers.isNestedScrollingEnabled = false
 
         presenter.loadUsers()
+
+    }
+
+    override fun onUsersLoaded() {
+        rvUsers.adapter.notifyItemRangeInserted(itemInsertPos, presenter.owners.size)
     }
 
     override fun showProgress() {
@@ -70,26 +85,24 @@ class UsersFragment : Fragment(), UsersView {
         nothing()
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        /*if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
-        }*/
+    fun onCardSelected(user: Owner) {
+        if (selectedListener != null) {
+            selectedListener?.onUserSelected(user)
+        }
     }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        /*if (context is OnFragmentInteractionListener) {
-            mListener = context
+        if (context is OnUserSelectedListener) {
+            selectedListener = context
         } else {
-            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
-        }*/
+            throw RuntimeException(context!!.toString() + " must implement OnUserSelectedListener")
+        }
     }
 
     override fun onDetach() {
         super.onDetach()
-        //mListener = null
+        selectedListener = null
     }
 
     override fun onDestroy() {
@@ -106,10 +119,9 @@ class UsersFragment : Fragment(), UsersView {
      *
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
-    /*interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
-    }*/
+    interface OnUserSelectedListener {
+        fun onUserSelected(user: Owner)
+    }
 
     companion object {
         val TAG = "UsersFragment"

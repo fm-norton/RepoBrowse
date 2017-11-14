@@ -1,4 +1,4 @@
-package fieldmarshal.repobrowse.ui.adapters
+package fieldmarshal.repobrowse.ui
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -66,6 +66,6 @@ class RepoAdapter(private val context: Context,
 
     override fun getItemCount() = repos.size
 
-    override fun onBindViewHolder(viewHolder: RepoAdapter.ViewHolder, position: Int)
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int)
             = viewHolder.bind(repos[position], listener)
 }

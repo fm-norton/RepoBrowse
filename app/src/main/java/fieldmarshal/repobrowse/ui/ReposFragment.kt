@@ -3,9 +3,11 @@ package fieldmarshal.repobrowse.ui
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,24 +33,33 @@ class ReposFragment : Fragment(), ReposView {
     //private var mListener: OnFragmentInteractionListener? = null
 
     private var presenter = ReposPresenter(this)
+    private var itemInsertPos = 0
 
+    private lateinit var collapsing_toolbar: CollapsingToolbarLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (activity as AppCompatActivity).supportActionBar?.title = ""
+        Log.d(TAG, "onCreate")
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater!!.inflate(R.layout.fragment_repos, container, false)
         rootView.tag = this::class.java.simpleName
+        collapsing_toolbar = rootView.findViewById(R.id.collapsing_toolbar)
+        collapsing_toolbar.title = ""
+        Log.d(TAG, "onCreateView")
         return rootView
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        presenter.initServiceCalls(arguments.getString("username"))
-        presenter.initRecyclerAdapter(context)
-        presenter.feedAdapter(rvRepos)
+        val name: String = arguments.getString("username")
+        Log.d(TAG, "arguments: " + name)
+        presenter.initServiceCalls(name)
+
+        rvRepos.adapter = RepoAdapter(context, presenter.reposMutableList, listener = {})
         rvRepos.layoutManager = LinearLayoutManager(context)
         rvRepos.isNestedScrollingEnabled = false
 
@@ -56,14 +67,18 @@ class ReposFragment : Fragment(), ReposView {
 
         presenter.loadToolbar()
         presenter.loadRepos()
+    }
 
+    override fun onReposLoaded() {
+        rvRepos.adapter.notifyItemRangeInserted(itemInsertPos, presenter.repos.size)
     }
 
     override fun inflateToolbar(user: User) {
         backdrop.loadUrlAndCropCircle(user.avatarUrl)
         collapsing_toolbar.title = user.name
-        collapsing_toolbar.setContentScrimColor(resources.getColor(R.color.md_light_appbar))
-        collapsing_toolbar.setBackgroundColor(resources.getColor(R.color.md_light_appbar))
+        collapsing_toolbar.setExpandedTitleColor(resources.getColor(R.color.md_white_1000))
+        collapsing_toolbar.setCollapsedTitleTextColor(resources.getColor(R.color.md_white_1000))
+
     }
 
     override fun showToolbarProgress() {
@@ -105,10 +120,10 @@ class ReposFragment : Fragment(), ReposView {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        /*if (context is OnFragmentInteractionListener) {
+        /*if (context is OnUserSelectedListener) {
             mListener = context
         } else {
-            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException(context!!.toString() + " must implement OnUserSelectedListener")
         }*/
     }
 
@@ -126,9 +141,9 @@ class ReposFragment : Fragment(), ReposView {
      *
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
-    interface OnFragmentInteractionListener {
+    /*interface OnFragmentInteractionListener {
         fun onFragmentInteraction(uri: Uri)
-    }
+    }*/
 
     companion object {
         var TAG = "ReposFragment"

@@ -15,10 +15,10 @@ import retrofit2.http.Query
 interface GithubRest {
 
     @GET("users/{user}/repos")
-    fun reposOfUser(@Path("user") user : String) : Observable<List<Repo>>
+    fun reposOfUser(@Path("user") user: String): Observable<List<Repo>>
 
     @GET("users/{username}")
-    fun getUserInfo(@Path("username") username : String) : Observable<User>
+    fun getUserInfo(@Path("username") username: String): Observable<User>
 
     @GET("search/users")
     fun getUsers(@Query("q") query: String): Observable<UserSearchResult>

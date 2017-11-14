@@ -9,6 +9,7 @@
     android:layout_marginBottom="4dp"
     android:layout_marginStart="4dp"
     android:layout_marginEnd="4dp"
+    android:background="?android:attr/selectableItemBackground"
     android:id="@+id/userCard">
 
     <RelativeLayout

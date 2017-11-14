@@ -6,6 +6,20 @@
     tools:context="fieldmarshal.repobrowse.ui.UsersFragment"
     android:id="@+id/fragmentContainer">
 
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbarUsers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/tbUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleTextColor="@color/md_white_1000"
+            app:title="@string/app_name"/>
+
+    </android.support.design.widget.AppBarLayout>
+
     <ProgressBar
         android:id="@+id/pbUsers"
         android:layout_width="wrap_content"
@@ -19,6 +33,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/appbarUsers"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
