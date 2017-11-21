@@ -7,6 +7,7 @@ import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import fieldmarshal.repobrowse.mvp.ReposPresenter
 import fieldmarshal.repobrowse.mvp.ReposView
 import fieldmarshal.repobrowse.util.*
 import kotlinx.android.synthetic.main.fragment_repos.*
+import kotlinx.android.synthetic.main.fragment_users.*
 import java.io.IOException
 
 
@@ -65,12 +67,35 @@ class ReposFragment : Fragment(), ReposView {
 
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
 
+        // TODO move scroll listener code to adapter
+        val scrollListener = object : RecyclerView.OnScrollListener() {
+            val visibleThreshold = 5
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView?.layoutManager
+                var totalItemCount = layoutManager?.itemCount
+                var lastVisibleItem = (layoutManager as LinearLayoutManager)
+                        .findLastVisibleItemPosition()
+
+                if (totalItemCount!! < (lastVisibleItem + visibleThreshold)) {
+                    presenter.loadMoreRepos()
+                }
+            }
+        }
+        rvRepos.addOnScrollListener(scrollListener)
         presenter.loadToolbar()
         presenter.loadRepos()
     }
 
     override fun onReposLoaded() {
         rvRepos.adapter.notifyItemRangeInserted(itemInsertPos, presenter.repos.size)
+        itemInsertPos += presenter.repos.size
     }
 
     override fun inflateToolbar(user: User) {

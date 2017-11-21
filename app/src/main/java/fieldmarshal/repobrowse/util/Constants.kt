@@ -1,6 +1,5 @@
 package fieldmarshal.repobrowse.util
 
-import android.graphics.Typeface
 
 /**
  * Created by fieldmarshal on 31.10.17.

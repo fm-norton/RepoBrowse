@@ -15,7 +15,6 @@ import fieldmarshal.repobrowse.models.Owner
 import fieldmarshal.repobrowse.mvp.UsersPresenter
 import fieldmarshal.repobrowse.mvp.UsersView
 import fieldmarshal.repobrowse.util.Constants
-import fieldmarshal.repobrowse.util.ItemClickSupport
 import fieldmarshal.repobrowse.util.longToast
 import fieldmarshal.repobrowse.util.nothing
 import kotlinx.android.synthetic.main.fragment_users.*
@@ -33,14 +32,13 @@ class UsersFragment : Fragment(), UsersView {
 
     private var selectedListener: OnUserSelectedListener? = null
     private var presenter = UsersPresenter(this)
-
+    private lateinit var tbUsers: Toolbar
     private var itemInsertPos = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    private lateinit var tbUsers: Toolbar
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater!!.inflate(R.layout.fragment_users, container, false)
@@ -49,24 +47,52 @@ class UsersFragment : Fragment(), UsersView {
         (activity as AppCompatActivity).setSupportActionBar(tbUsers)
         return rootView
     }
+
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        rvUsers.adapter = OwnersAdapter(context, presenter.ownerMutableList, listener = {
-            user ->
+        rvUsers.adapter = OwnersAdapter(context, presenter.ownerMutableList, listener = { user ->
             if (selectedListener != null) {
                 selectedListener?.onUserSelected(user)
             }
         })
-        rvUsers.layoutManager = LinearLayoutManager(context)
+        val linearLM = LinearLayoutManager(context)
+        rvUsers.layoutManager = linearLM
         rvUsers.isNestedScrollingEnabled = false
 
-        presenter.loadUsers()
+        // TODO move scroll listener code to adapter
+        val scrollListener = object : RecyclerView.OnScrollListener() {
+            val visibleThreshold = 5
 
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView?.layoutManager
+                var totalItemCount = layoutManager?.itemCount
+                var firstVisibleItem = (layoutManager as LinearLayoutManager)
+                        .findFirstVisibleItemPosition()
+
+                if (totalItemCount!! <= (firstVisibleItem + visibleThreshold)) {
+                    presenter.loadMoreUsers()
+                }
+            }
+        }
+        rvUsers.addOnScrollListener(scrollListener)
+        presenter.loadUsers()
     }
 
     override fun onUsersLoaded() {
         rvUsers.adapter.notifyItemRangeInserted(itemInsertPos, presenter.owners.size)
+        itemInsertPos += presenter.owners.size
+    }
+
+    override fun onMoreUsersLoaded() {
+        rvUsers.adapter.notifyItemRangeInserted(itemInsertPos, presenter.owners.size)
+        itemInsertPos += presenter.owners.size
     }
 
     override fun showProgress() {
@@ -83,12 +109,6 @@ class UsersFragment : Fragment(), UsersView {
 
     override fun onOnlineCheck() {
         nothing()
-    }
-
-    fun onCardSelected(user: Owner) {
-        if (selectedListener != null) {
-            selectedListener?.onUserSelected(user)
-        }
     }
 
     override fun onAttach(context: Context?) {
