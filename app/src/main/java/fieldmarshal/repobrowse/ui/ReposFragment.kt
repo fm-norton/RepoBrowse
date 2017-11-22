@@ -1,7 +1,6 @@
 package fieldmarshal.repobrowse.ui
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.Fragment
@@ -16,9 +15,11 @@ import fieldmarshal.repobrowse.R
 import fieldmarshal.repobrowse.models.User
 import fieldmarshal.repobrowse.mvp.ReposPresenter
 import fieldmarshal.repobrowse.mvp.ReposView
-import fieldmarshal.repobrowse.util.*
+import fieldmarshal.repobrowse.util.Constants
+import fieldmarshal.repobrowse.util.loadAndCrop
+import fieldmarshal.repobrowse.util.longToast
+import fieldmarshal.repobrowse.util.nothing
 import kotlinx.android.synthetic.main.fragment_repos.*
-import kotlinx.android.synthetic.main.fragment_users.*
 import java.io.IOException
 
 
@@ -38,6 +39,7 @@ class ReposFragment : Fragment(), ReposView {
     private var itemInsertPos = 0
 
     private lateinit var collapsing_toolbar: CollapsingToolbarLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.title = ""
@@ -58,7 +60,7 @@ class ReposFragment : Fragment(), ReposView {
         super.onViewCreated(view, savedInstanceState)
 
         val name: String = arguments.getString("username")
-        Log.d(TAG, "arguments: " + name)
+        //Log.d(TAG, "arguments: " + name)
         presenter.initServiceCalls(name)
 
         rvRepos.adapter = RepoAdapter(context, presenter.reposMutableList, listener = {})
@@ -83,7 +85,7 @@ class ReposFragment : Fragment(), ReposView {
                 var lastVisibleItem = (layoutManager as LinearLayoutManager)
                         .findLastVisibleItemPosition()
 
-                if (totalItemCount!! < (lastVisibleItem + visibleThreshold)) {
+                if (totalItemCount!! <= (lastVisibleItem + visibleThreshold)) {
                     presenter.loadMoreRepos()
                 }
             }
@@ -93,17 +95,17 @@ class ReposFragment : Fragment(), ReposView {
         presenter.loadRepos()
     }
 
+
     override fun onReposLoaded() {
         rvRepos.adapter.notifyItemRangeInserted(itemInsertPos, presenter.repos.size)
         itemInsertPos += presenter.repos.size
     }
 
     override fun inflateToolbar(user: User) {
-        backdrop.loadUrlAndCropCircle(user.avatarUrl)
+        backdrop.loadAndCrop(user.avatarUrl)
         collapsing_toolbar.title = user.name
         collapsing_toolbar.setExpandedTitleColor(resources.getColor(R.color.md_white_1000))
         collapsing_toolbar.setCollapsedTitleTextColor(resources.getColor(R.color.md_white_1000))
-
     }
 
     override fun showToolbarProgress() {
@@ -134,13 +136,6 @@ class ReposFragment : Fragment(), ReposView {
     override fun onDestroy() {
         presenter.dispose()
         super.onDestroy()
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        /*if (mListener != null) {
-            mListener!!.onFragmentInteraction(uri)
-        }*/
     }
 
     override fun onAttach(context: Context?) {

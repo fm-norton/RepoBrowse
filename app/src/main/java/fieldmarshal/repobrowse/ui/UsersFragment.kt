@@ -60,7 +60,6 @@ class UsersFragment : Fragment(), UsersView {
         rvUsers.layoutManager = linearLM
         rvUsers.isNestedScrollingEnabled = false
 
-        // TODO move scroll listener code to adapter
         val scrollListener = object : RecyclerView.OnScrollListener() {
             val visibleThreshold = 5
 
@@ -72,11 +71,11 @@ class UsersFragment : Fragment(), UsersView {
                 super.onScrolled(recyclerView, dx, dy)
 
                 val layoutManager = recyclerView?.layoutManager
-                var totalItemCount = layoutManager?.itemCount
-                var firstVisibleItem = (layoutManager as LinearLayoutManager)
-                        .findFirstVisibleItemPosition()
+                val totalItemCount = layoutManager?.itemCount
+                val lastVisibleItem = (layoutManager as LinearLayoutManager)
+                        .findLastVisibleItemPosition()
 
-                if (totalItemCount!! <= (firstVisibleItem + visibleThreshold)) {
+                if (totalItemCount!! <= (lastVisibleItem + visibleThreshold)) {
                     presenter.loadMoreUsers()
                 }
             }

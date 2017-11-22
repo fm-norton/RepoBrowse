@@ -4,12 +4,12 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardCornerRadius="2dp"
-    card_view:cardElevation="8dp"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
-    android:layout_marginStart="4dp"
-    android:layout_marginEnd="4dp"
+    card_view:cardCornerRadius="@dimen/cardCornerRadius"
+    card_view:cardElevation="@dimen/cardElevation"
+    android:layout_marginTop="@dimen/card_margin"
+    android:layout_marginBottom="@dimen/card_margin"
+    android:layout_marginStart="@dimen/card_margin"
+    android:layout_marginEnd="@dimen/card_margin"
     android:id="@+id/repoCard">
 
     <RelativeLayout
@@ -21,7 +21,7 @@
             android:id="@+id/fullnameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/fullname_card_marginStart"
             android:text="@string/fullname_stub"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textStyle="bold" />
@@ -31,16 +31,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/fullnameText"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="@dimen/desc_card_margin"
+            android:layout_marginEnd="@dimen/desc_card_margin"
             android:text="@string/desc_stub"/>
 
         <ImageView
             android:id="@+id/starIcon"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
             android:layout_below="@id/descText"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/icon_marginStart"
             android:background="@drawable/star" />
 
         <TextView
@@ -49,16 +49,16 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/descText"
             android:layout_toEndOf="@id/starIcon"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="@dimen/icon_text_margin"
             android:text="@string/stars_count"/>
 
         <ImageView
             android:id="@+id/forkIcon"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
             android:layout_below="@id/descText"
             android:layout_toEndOf="@+id/starCount"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/icon_marginStart"
             android:background="@drawable/fork" />
 
         <TextView
@@ -67,16 +67,16 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/descText"
             android:layout_toEndOf="@id/forkIcon"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="@dimen/icon_text_margin"
             android:text="@string/forks_count" />
 
         <ImageView
             android:id="@+id/dateIcon"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
             android:layout_below="@id/descText"
             android:layout_toEndOf="@id/forkCount"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/icon_marginStart"
             android:background="@drawable/ic_action_calendar_day" />
 
         <TextView
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/descText"
             android:layout_toEndOf="@id/dateIcon"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="@dimen/text_margin"
             android:text="@string/date_stub" />
 
     </RelativeLayout>

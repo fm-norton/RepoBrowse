@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="text_margin">16dp</dimen>
-    <dimen name="backdrop_height">256dp</dimen>
+    <dimen name="expanded_toolbar_size">256dp</dimen>
+    <dimen name="backdrop_margin">128dp</dimen>
+    <dimen name="backdrop_size">128dp</dimen>
+    <dimen name="backdrop_marginTop">16dp</dimen>
+    <dimen name="cardCornerRadius">2dp</dimen>
+    <dimen name="cardElevation">8dp</dimen>
+
+    <dimen name="card_margin">4dp</dimen>
+    <dimen name="card_avatar_size">64dp</dimen>
+    <dimen name="card_avatar_margin">4dp</dimen>
+    <dimen name="username_card_margin">8dp</dimen>
+    <dimen name="repostext_card_padding">8dp</dimen>
+    <dimen name="fullname_card_marginStart">8dp</dimen>
+    <dimen name="desc_card_margin">8dp</dimen>
+    <dimen name="icon_size">16dp</dimen>
+    <dimen name="icon_marginStart">8dp</dimen>
+    <dimen name="icon_text_margin">4dp</dimen>
+    <dimen name="toolbarProgressMargin">64dp</dimen>
+    <dimen name="reposProgressMargin">32dp</dimen>
 </resources>

@@ -49,10 +49,7 @@ class RepoAdapter(private val context: Context,
             initTextView(context, descText, repo.description, Constants.ROBOTO_REGULAR)
             initTextView(context, starCount, repo.stargazers.toString(), Constants.ROBOTO_LIGHT)
             initTextView(context, forkCount, repo.forks.toString(), Constants.ROBOTO_LIGHT)
-
-            val prettyDateString = DateUtils
-                    .getPrettyDate(resources.getString(R.string.prettyDateFormat), repo.createdAt)
-
+            val prettyDateString = DateUtils.getPrettyDate(resources.getString(R.string.prettyDateFormat), repo.createdAt)
             initTextView(context, dateCreated, prettyDateString, Constants.ROBOTO_LIGHT)
             setOnClickListener { listener(repo) }
         }
@@ -66,6 +63,7 @@ class RepoAdapter(private val context: Context,
 
     override fun getItemCount() = repos.size
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int)
-            = viewHolder.bind(repos[position], listener)
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) =
+        viewHolder.bind(repos[position], listener)
+
 }

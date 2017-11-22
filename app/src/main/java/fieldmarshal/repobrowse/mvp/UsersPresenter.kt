@@ -28,10 +28,12 @@ class UsersPresenter(view: UsersView) : BasePresenter<UsersView>(view) {
 
     private var call: Observable<Response<UserSearchResult>> = githubRest.getUsers(queryStr)
 
-    lateinit var nextPageUrl: String
-    lateinit var lastPageUrl: String
-    var nextPage: Int = 0
+    private lateinit var nextPageUrl: String
+    private lateinit var lastPageUrl: String
+
     private lateinit var callNextPage: Observable<Response<UserSearchResult>>
+    var loading = false
+    var loadingComplete = true
 
     var owners = listOf<Owner>()
         private set
@@ -48,13 +50,18 @@ class UsersPresenter(view: UsersView) : BasePresenter<UsersView>(view) {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     { response ->
-                                        nextPageUrl = LinkPager(response.headers()).next!!
+                                        val pager = LinkPager(response.headers())
+                                        nextPageUrl = pager.next!!
+                                        lastPageUrl = pager.last!!
+
                                         owners = response.body()!!.items
                                         ownerMutableList.addAll(owners)
                                         view.onUsersLoaded()
+                                        //loading = false
                                         view.hideProgress()
                                     },
                                     { t ->
+                                        //loading = false
                                         view.hideProgress()
                                         view.onError(t)
                                         Log.e(UsersFragment.TAG, "Exception", t)
@@ -66,6 +73,7 @@ class UsersPresenter(view: UsersView) : BasePresenter<UsersView>(view) {
 
     fun loadMoreUsers() {
         view.showProgress()
+        //loading = true
         callNextPage = githubRest.getUsersPaginated(nextPageUrl)
 
         disposable.add(
@@ -78,15 +86,42 @@ class UsersPresenter(view: UsersView) : BasePresenter<UsersView>(view) {
                                     owners = response.body()!!.items
                                     ownerMutableList.addAll(owners)
                                     view.onMoreUsersLoaded()
+                                    //loading = false
                                     view.hideProgress()
                                 },
                                 { t ->
+                                    //loading = false
                                     view.hideProgress()
                                     view.onError(t)
                                     Log.e(UsersFragment.TAG, "Exception", t)
                                 }, { Log.d(UsersFragment.TAG, "CallNextPage completed") }
                         )
         )
-    }
 
+        /*if (nextPageUrl == lastPageUrl) {
+            val callLastPage = githubRest.getUsersPaginated(lastPageUrl)
+            disposable.add(
+                    callLastPage.subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    { response ->
+                                        owners = response.body()!!.items
+                                        ownerMutableList.addAll(owners)
+                                        view.onMoreUsersLoaded()
+                                        loading = false
+                                        //view.hideProgress()
+                                    },
+                                    { t ->
+                                        //view.hideProgress()
+                                        view.onError(t)
+                                        Log.e(UsersFragment.TAG, "Exception", t)
+                                    },
+                                    {
+                                        loadingComplete = true
+                                        Log.d(UsersFragment.TAG, "CallLastPage completed")
+                                    })
+            )
+            return
+        }*/
+    }
 }

@@ -8,7 +8,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/backdrop_height"
+        android:layout_height="@dimen/expanded_toolbar_size"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
         android:fitsSystemWindows="true">
 
@@ -25,11 +25,11 @@
 
             <ImageView
                 android:id="@+id/backdrop"
-                android:layout_width="128dp"
-                android:layout_height="128dp"
-                android:layout_marginEnd="128dp"
-                android:layout_marginStart="128dp"
-                android:layout_marginTop="16dp"
+                android:layout_width="@dimen/backdrop_size"
+                android:layout_height="@dimen/backdrop_size"
+                android:layout_marginEnd="@dimen/backdrop_margin"
+                android:layout_marginStart="@dimen/backdrop_margin"
+                android:layout_marginTop="@dimen/backdrop_marginTop"
                 android:layout_gravity="center_horizontal"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center"
-                android:layout_marginBottom="64dp"
+                android:layout_marginBottom="@dimen/toolbarProgressMargin"
                 android:visibility="gone"
                 android:indeterminate="true" />
 
@@ -76,7 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="@dimen/reposProgressMargin"
         android:indeterminate="true"
         android:visibility="gone"
         style="?android:attr/progressBarStyle" />

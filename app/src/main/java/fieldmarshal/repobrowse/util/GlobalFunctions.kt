@@ -2,7 +2,6 @@ package fieldmarshal.repobrowse.util
 
 import android.content.Context
 import android.graphics.Typeface
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -15,8 +14,12 @@ import com.bumptech.glide.request.RequestOptions
  * Created by fieldmarshal on 03.11.17.
  */
 
-fun ImageView.loadUrlAndCropCircle(url: String) {
+fun ImageView.loadAndCrop(url: String) {
     Glide.with(context).load(url).apply(RequestOptions.circleCropTransform()).into(this)
+}
+
+fun ImageView.load(url: String) {
+    Glide.with(context).load(url).into(this)
 }
 
 fun initTextView(context: Context, view: TextView, text: String?, fontPath: String) {
