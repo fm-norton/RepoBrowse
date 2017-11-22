@@ -69,25 +69,25 @@ class ReposPresenter(view: ReposView) : BasePresenter<ReposView>(view) {
     }
 
     fun loadRepos() {
-        //view.showProgress()
+        view.showProgress()
         //loading = true
         disposable.add(
                 callRepos.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { response ->
-                                    val linkPager = LinkPager(response.headers())
+                                    /*val linkPager = LinkPager(response.headers())
                                     nextPageUrl = linkPager.next!!
-                                    lastPageUrl = linkPager.last!!
+                                    lastPageUrl = linkPager.last!!*/
                                     repos = response.body()!!
                                     reposMutableList.addAll(repos)
                                     view.onReposLoaded()
                                     //loading = false
-                                    //view.hideProgress()
+                                    view.hideProgress()
                                 },
                                 { t ->
                                     //loading = false
-                                    //view.hideProgress()
+                                    view.hideProgress()
                                     view.onError(t)
                                     Log.e(ReposFragment.TAG, t.message, t)
                                 }, { Log.d(ReposFragment.TAG, "Repos call completed") }

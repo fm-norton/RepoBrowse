@@ -10,5 +10,5 @@
     <string name="date_stub">2001&#8211;09&#8211;11</string>
     <string name="prettyDateFormat">dd.MM.YYYY</string>
     <string name="name_stub">John Smith</string>
-    <string name="repos_count">Repos: %4$d</string>
+    <string name="repos_count">Repos: %1$d</string>
 </resources>

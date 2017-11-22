@@ -60,7 +60,7 @@ class UsersFragment : Fragment(), UsersView {
         rvUsers.layoutManager = linearLM
         rvUsers.isNestedScrollingEnabled = false
 
-        val scrollListener = object : RecyclerView.OnScrollListener() {
+        /*val scrollListener = object : RecyclerView.OnScrollListener() {
             val visibleThreshold = 5
 
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
@@ -80,7 +80,7 @@ class UsersFragment : Fragment(), UsersView {
                 }
             }
         }
-        rvUsers.addOnScrollListener(scrollListener)
+        rvUsers.addOnScrollListener(scrollListener)*/
         presenter.loadUsers()
     }
 

@@ -50,9 +50,9 @@ class UsersPresenter(view: UsersView) : BasePresenter<UsersView>(view) {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     { response ->
-                                        val pager = LinkPager(response.headers())
+                                        /*val pager = LinkPager(response.headers())
                                         nextPageUrl = pager.next!!
-                                        lastPageUrl = pager.last!!
+                                        lastPageUrl = pager.last!!*/
 
                                         owners = response.body()!!.items
                                         ownerMutableList.addAll(owners)

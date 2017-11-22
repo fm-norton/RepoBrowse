@@ -1,6 +1,7 @@
 package fieldmarshal.repobrowse.ui
 
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.v4.app.Fragment
@@ -15,11 +16,9 @@ import fieldmarshal.repobrowse.R
 import fieldmarshal.repobrowse.models.User
 import fieldmarshal.repobrowse.mvp.ReposPresenter
 import fieldmarshal.repobrowse.mvp.ReposView
-import fieldmarshal.repobrowse.util.Constants
-import fieldmarshal.repobrowse.util.loadAndCrop
-import fieldmarshal.repobrowse.util.longToast
-import fieldmarshal.repobrowse.util.nothing
+import fieldmarshal.repobrowse.util.*
 import kotlinx.android.synthetic.main.fragment_repos.*
+import kotlinx.android.synthetic.main.fragment_repos.view.*
 import java.io.IOException
 
 
@@ -70,7 +69,7 @@ class ReposFragment : Fragment(), ReposView {
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
 
         // TODO move scroll listener code to adapter
-        val scrollListener = object : RecyclerView.OnScrollListener() {
+        /*val scrollListener = object : RecyclerView.OnScrollListener() {
             val visibleThreshold = 5
 
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
@@ -90,7 +89,7 @@ class ReposFragment : Fragment(), ReposView {
                 }
             }
         }
-        rvRepos.addOnScrollListener(scrollListener)
+        rvRepos.addOnScrollListener(scrollListener)*/
         presenter.loadToolbar()
         presenter.loadRepos()
     }
@@ -104,6 +103,8 @@ class ReposFragment : Fragment(), ReposView {
     override fun inflateToolbar(user: User) {
         backdrop.loadAndCrop(user.avatarUrl)
         collapsing_toolbar.title = user.name
+        var repoString = resources.getString(R.string.repos_count, user.publicRepos)
+        initTextView(context, reposCountText, repoString, Constants.ROBOTO_LIGHT)
         collapsing_toolbar.setExpandedTitleColor(resources.getColor(R.color.md_white_1000))
         collapsing_toolbar.setCollapsedTitleTextColor(resources.getColor(R.color.md_white_1000))
     }

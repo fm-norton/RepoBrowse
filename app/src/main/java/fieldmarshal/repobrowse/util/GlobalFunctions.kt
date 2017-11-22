@@ -27,6 +27,7 @@ fun initTextView(context: Context, view: TextView, text: String?, fontPath: Stri
     view.typeface = Typeface.createFromAsset(context.assets, fontPath)
 }
 
+
 fun shortToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }

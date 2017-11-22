@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/descText"
             android:layout_toEndOf="@id/dateIcon"
-            android:layout_marginStart="@dimen/text_margin"
+            android:layout_marginStart="@dimen/icon_text_margin"
             android:text="@string/date_stub" />
 
     </RelativeLayout>
